@@ -26,7 +26,6 @@ There are three prerequisites to get started:
     7. Save changes
 
 Tested on:
-- -
 - WordPress 3.8.1 --> 4.9.5
 - WooCommerce 2.1.9 --> 3.3.5
 
