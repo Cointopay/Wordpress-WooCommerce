@@ -21,9 +21,8 @@ There are three prerequisites to get started:
     2. Go to your WooCommerce Settings, and click the Checkout tab, find C2P/Cointopay.
     3. In settings "MerchantID" <- set your Cointopay ID.
     4. In settings "AltCoinID", this can also be found in the Account section of Cointopay.com. Default 1 for bitcoin, 2 litecoin etc..
-    5. Invoice API Key is not needed at this point! Can enter some bogus.
-    6. In settings "SecurityCode" <- set your Cointopay Security code (no API key required)
-    7. Save changes
+    5. In settings "SecurityCode" <- set your Cointopay Security code (no API key required)
+    6. Save changes
 
 Tested on:
 - WordPress 3.8.1 --> 4.9.5
