@@ -175,7 +175,7 @@ add_action('plugins_loaded', 'woocommerce_Cointopay_init', 0);
 				CURLOPT_RETURNTRANSFER => true,
 				CURLOPT_SSL_VERIFYPEER => false,
 				CURLOPT_HTTPHEADER => $params,
-                		//CURLOPT_USERAGENT => $this->apikey,
+                		CURLOPT_USERAGENT => $this->merchantid,
 				CURLOPT_HTTPAUTH => CURLAUTH_BASIC
 				)
 				);
@@ -288,13 +288,13 @@ add_action('plugins_loaded', 'woocommerce_Cointopay_init', 0);
 			 *
 			 * @return string Error Mensage.
 			 */
-			public function apikey_missing_message() {
-				$message = '<div class="error">';
-					$message .= '<p>' . sprintf( __( '<strong>Gateway Disabled</strong> You should enter your API key in Cointopay configuration. %sClick here to configure!%s' , 'wcCointopay' ), '<a href="' . get_admin_url() . 'admin.php?page=wc-settings&amp;tab=checkout&amp;section=wc_Cointopay">', '</a>' ) . '</p>';
-				$message .= '</div>';
-
-				echo $message;
-			}
+			//public function apikey_missing_message() {
+			//	$message = '<div class="error">';
+		//			$message .= '<p>' . sprintf( __( '<strong>Gateway Disabled</strong> You should enter your API key in Cointopay configuration. %sClick here to configure!%s' , 'wcCointopay' ), '<a href="' . get_admin_url() . 'admin.php?page=wc-settings&amp;tab=checkout&amp;section=wc_Cointopay">', '</a>' ) . '</p>';
+	//			$message .= '</div>';
+//
+//				echo $message;
+//			}
 
 			/**
 			 * Adds error message when not configured the secret.
