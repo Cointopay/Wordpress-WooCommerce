@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 /*
 Plugin Name: WooCommerce Cointopay.com
 Description: Extends WooCommerce with crypto payments gateway.
-Version: 0.1
+Version: 0.2
 Author: Cointopay
 */
 
@@ -44,7 +44,7 @@ add_action('plugins_loaded', 'woocommerce_Cointopay_init', 0);
 				$this->description = $this->get_option('description');
 				$this->altcoinid = $this->get_option('altcoinid');
 				$this->merchantid = $this->get_option('merchantid');
-				$this->apikey = $this->get_option('apikey');
+				//$this->apikey = $this->get_option('apikey');
 				$this->secret = $this->get_option('secret');
 				//$this->debug = $this->get_option('debug');
 
@@ -58,10 +58,10 @@ add_action('plugins_loaded', 'woocommerce_Cointopay_init', 0);
 				add_action( 'woocommerce_api_' . strtolower( get_class( $this ) ), array( &$this, 'check_Cointopay_response' ) );
 
 				// Valid for use.
-				$this->enabled = (($this->settings['enabled'] && !empty($this->apikey) && !empty($this->secret)) ? 'yes' : 'no');
+				$this->enabled = (($this->settings['enabled'] && !empty($this->secret)) ? 'yes' : 'no');
 
 				// Checking if apikey is not empty.
-				$this->apikey == '' ? add_action( 'admin_notices', array( &$this, 'apikey_missing_message' ) ) : '';
+				//$this->apikey == '' ? add_action( 'admin_notices', array( &$this, 'apikey_missing_message' ) ) : '';
 
 				// Checking if app_secret is not empty.
 				$this->secret == '' ? add_action( 'admin_notices', array( &$this, 'secret_missing_message' ) ) : '';
@@ -100,12 +100,12 @@ add_action('plugins_loaded', 'woocommerce_Cointopay_init', 0);
 						'description' => __( 'Please enter your Preferred AltCoinID (1 for bitcoin)', 'Cointopay' ) . ' ' . sprintf( __( 'You can get this information in: %sCointopay Account%s.', 'Cointopay' ), '<a href="https://cointopay.com" target="_blank">', '</a>' ),
 						'default' => '1'
 					),
-					'apikey' => array(
-						'title' => __( 'Invoice API Key', 'Cointopay' ),
-						'type' => 'password',
-						'description' => __( 'Please enter your Cointopay Merchant API key', 'Cointopay' ) . ' ' . sprintf( __( 'You can get this information in: %sCointopay Account%s.', 'Cointopay' ), '<a href="https://cointopay.com" target="_blank">', '</a>' ),
-						'default' => ''
-					),
+					//'apikey' => array(
+					//	'title' => __( 'Invoice API Key', 'Cointopay' ),
+					//	'type' => 'password',
+					//	'description' => __( 'Please enter your Cointopay Merchant API key', 'Cointopay' ) . ' ' . sprintf( __( 'You can get this information in: %sCointopay Account%s.', 'Cointopay' ), '<a href="https://cointopay.com" target="_blank">', '</a>' ),
+					//	'default' => ''
+					//),
 					'secret' => array(
 						'title' => __( 'SecurityCode', 'Cointopay' ),
 						'type' => 'password',
@@ -161,7 +161,7 @@ add_action('plugins_loaded', 'woocommerce_Cointopay_init', 0);
 					if ($item['qty']) $item_names[] = $item['name'] . ' x ' . $item['qty'];
 				endforeach; endif;
  						$params = array(
-                            "authentication:$this->apikey",
+                            "authentication:$this->merchantid",
                             'cache-control: no-cache',
                         );
 				$item_name = sprintf( __('Order %s' , 'woocommerce'), $order->get_order_number() ) . " - " . implode(', ', $item_names);
@@ -175,7 +175,7 @@ add_action('plugins_loaded', 'woocommerce_Cointopay_init', 0);
 				CURLOPT_RETURNTRANSFER => true,
 				CURLOPT_SSL_VERIFYPEER => false,
 				CURLOPT_HTTPHEADER => $params,
-                CURLOPT_USERAGENT => $this->apikey,
+                		//CURLOPT_USERAGENT => $this->apikey,
 				CURLOPT_HTTPAUTH => CURLAUTH_BASIC
 				)
 				);
