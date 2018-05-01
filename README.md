@@ -30,7 +30,7 @@ Tested on:
 
 ### Notes:
 - Please note that the default checkout currency is Bitcoin, the customer can pay via other currencies as well by clicking the currency icon. Enable other currencies on Cointopay.com by going to Account > Wallet preferences and selecting multiple currencies.
-- We set a paid payment to paid, a partial payment stays as unpaid in WooCommerce. You will receive the partial payment in your account on Cointopay.com. Payment notifications via IPN messaging.
+- We set a paid, on hold and cancelled, a partial payment stays on hold in WooCommerce. You will receive the partial payment in your account on Cointopay.com. Payment notifications via IPN messaging.
 
 If you have any questions, please send them to support@cointopay.com, we do appreciate a mail when you are going live so we can monitor your go-live as well.
 
