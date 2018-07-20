@@ -130,7 +130,7 @@ if(is_plugin_active( 'woocommerce/woocommerce.php') )
 
 				<div id="wc_get_started">
 					<span class="main"><?php _e('Provides a secure way to accept crypto currencies.', 'Cointopay'); ?></span>
-					<p><a href="https://cointopay.com/index.jsp?#Register" target="_blank" class="button button-primary"><?php _e('Join free', 'Cointopay'); ?></a> <a href="https://cointopay.com" target="_blank" class="button"><?php _e('Learn more about WooCommerce and Cointopay', 'Cointopay'); ?></a></p>
+					<p><a href="https://app.cointopay.com/index.jsp?#Register" target="_blank" class="button button-primary"><?php _e('Join free', 'Cointopay'); ?></a> <a href="https://cointopay.com" target="_blank" class="button"><?php _e('Learn more about WooCommerce and Cointopay', 'Cointopay'); ?></a></p>
 				</div>
 
 				<table class="form-table">
@@ -170,7 +170,7 @@ if(is_plugin_active( 'woocommerce/woocommerce.php') )
 				$ch = curl_init();
 
 				curl_setopt_array($ch, array(
-				CURLOPT_URL => 'https://cointopay.com/MerchantAPI?Checkout=true',
+				CURLOPT_URL => 'https://app.cointopay.com/MerchantAPI?Checkout=true',
 				//CURLOPT_USERPWD => $this->apikey,
 				CURLOPT_POSTFIELDS => 'SecurityCode=' . $this->secret . '&MerchantID=' . $this->merchantid . '&Amount=' . number_format($order->get_total(), 8, '.', '') . '&AltCoinID=' . $this->altcoinid . '&output=json&inputCurrency=' . get_woocommerce_currency() . '&CustomerReferenceNr=' . $order_id . '&returnurl='.rawurlencode(esc_url($this->get_return_url($order))).'&transactionconfirmurl='.site_url('/?wc-api=Cointopay') .'&transactionfailurl='.rawurlencode(esc_url($order->get_cancel_order_url())),
 				CURLOPT_RETURNTRANSFER => true,
