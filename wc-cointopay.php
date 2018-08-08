@@ -197,11 +197,37 @@ if(is_plugin_active( 'woocommerce/woocommerce.php') )
 			**/
 			function check_Cointopay_response()
 			{
+				global $woocommerce;
+                $woocommerce->cart->empty_cart();
 				$Cointopay = $_REQUEST;
 				$order_id = intval($Cointopay['CustomerReferenceNr']);
 
 				$order = new WC_Order($order_id);
-				if ($Cointopay['status'] == 'paid') {
+				$data = [ 
+                           'mid' => $this->merchantid , 
+                           'TransactionID' => $_REQUEST['TransactionID'] ,
+                           'ConfirmCode' => $_REQUEST['ConfirmCode']
+                      ];
+              $response = $this->validateOrder($data);
+			  if($response->Status !== $_REQUEST['status'])
+              {
+				  get_header();
+                  echo '<div class="container" style="text-align: center;"><div><div>
+					<br><br>
+					<h2 style="color:#ff0000">Failure!</h2>
+					<img src="'.plugins_url( 'images/fail.png', __FILE__ ).'">
+					<p style="font-size:20px;color:#5C5C5C;">We have detected different order status. Your order has been halted.</p>
+					<a href="'.site_url().'" style="background-color: #ff0000;border: none;color: white; padding: 15px 32px; text-align: center;text-decoration: none;display: inline-block; font-size: 16px;" >    Back     </a>
+					<br><br>
+					</div>
+					</div>
+					</div>';
+					get_footer();
+                  exit;
+              }
+			   else if($response->CustomerReferenceNr == $_REQUEST['CustomerReferenceNr'])
+              {
+				    if ($Cointopay['status'] == 'paid' && $_REQUEST['notenough']==0) {
 					// Do your magic here, and return 200 OK to Cointopay.
 
 					if ($order->status == 'completed')
@@ -214,7 +240,7 @@ if(is_plugin_active( 'woocommerce/woocommerce.php') )
 						$order->update_status( 'completed', sprintf( __( 'IPN: Payment completed notification from Cointopay', 'woocommerce' ) ) );
 
 					}
-
+                    get_header();
 					echo '<div class="container" style="text-align: center;"><div><div>
 					<br><br>
 					<h2 style="color:#0fad00">Success!</h2>
@@ -222,22 +248,23 @@ if(is_plugin_active( 'woocommerce/woocommerce.php') )
 					<p style="font-size:20px;color:#5C5C5C;">The payment has been received and confirmed successfully.</p>
 					<a href="'.site_url().'" style="background-color: #0fad00;border: none;color: white; padding: 15px 32px; text-align: center;text-decoration: none;display: inline-block; font-size: 16px;" >    Back     </a>
 					<br><br>
-					<p>Redirecting in 5 Seconds.</p>
 					<br><br>
 					</div>
 					</div>
 					</div>';
-					echo "<script>
+					get_footer();
+				/*	echo "<script>
 					setTimeout(function () {
 					window.location.href= '".site_url()."';
 					}, 5000);
-					</script>";
+					</script>";*/
 					//header('HTTP/1.1 200 OK');
 					exit;
 				}
 				else if ($Cointopay['status'] == 'failed' && $Cointopay['notenough'] == 1) {
 
 					$order->update_status( 'on-hold', sprintf( __( 'IPN: Payment failed notification from Cointopay because notenough', 'woocommerce' ) ) );
+					get_header();
 					echo '<div class="container" style="text-align: center;"><div><div>
 					<br><br>
 					<h2 style="color:#ff0000">Failure!</h2>
@@ -245,21 +272,22 @@ if(is_plugin_active( 'woocommerce/woocommerce.php') )
 					<p style="font-size:20px;color:#5C5C5C;">The payment has been failed.</p>
 					<a href="'.site_url().'" style="background-color: #ff0000;border: none;color: white; padding: 15px 32px; text-align: center;text-decoration: none;display: inline-block; font-size: 16px;" >    Back     </a>
 					<br><br>
-					<p>Redirecting in 5 Seconds.</p>
 					<br><br>
 					</div>
 					</div>
 					</div>';
-					echo "<script>
+					get_footer();
+				/*	echo "<script>
 					setTimeout(function () {
 					window.location.href= '".site_url()."';
 					}, 5000);
-					</script>";
+					</script>";*/
 					exit;
 				}
 				else{
 
 					$order->update_status( 'failed', sprintf( __( 'IPN: Payment failed notification from Cointopay', 'woocommerce' ) ) );
+					get_header();
 					echo '<div class="container" style="text-align: center;"><div><div>
 					<br><br>
 					<h2 style="color:#ff0000">Failure!</h2>
@@ -267,18 +295,52 @@ if(is_plugin_active( 'woocommerce/woocommerce.php') )
 					<p style="font-size:20px;color:#5C5C5C;">The payment has been failed.</p>
 					<a href="'.site_url().'" style="background-color: #ff0000;border: none;color: white; padding: 15px 32px; text-align: center;text-decoration: none;display: inline-block; font-size: 16px;" >    Back     </a>
 					<br><br>
-					<p>Redirecting in 5 Seconds.</p>
 					<br><br>
 					</div>
 					</div>
 					</div>';
-					echo "<script>
+					get_footer();
+				/*	echo "<script>
 					setTimeout(function () {
 					window.location.href= '".site_url()."';
 					}, 5000);
-					</script>";
+					</script>";*/
 					exit;
 				}
+			  }
+			  else if($response == 'not found')
+              {
+				  $order->update_status( 'failed', sprintf( __( 'We have detected different order status. Your order has not been found.', 'woocommerce' ) ) );
+				  get_header();
+					echo '<div class="container" style="text-align: center;"><div><div>
+					<br><br>
+					<h2 style="color:#ff0000">Failure!</h2>
+					<img src="'.plugins_url( 'images/fail.png', __FILE__ ).'">
+					<p style="font-size:20px;color:#5C5C5C;">We have detected different order status. Your order has not been found..</p>
+					<a href="'.site_url().'" style="background-color: #ff0000;border: none;color: white; padding: 15px 32px; text-align: center;text-decoration: none;display: inline-block; font-size: 16px;" >    Back     </a>
+					<br><br>
+					<br><br>
+					</div>
+					</div>
+					</div>';
+					get_footer();
+			  }
+			  else{
+				  $order->update_status( 'failed', sprintf( __( 'We have detected different order status. Your order has been halted.', 'woocommerce' ) ) );
+				  get_header();
+					echo '<div class="container" style="text-align: center;"><div><div>
+					<br><br>
+					<h2 style="color:#ff0000">Failure!</h2>
+					<img src="'.plugins_url( 'images/fail.png', __FILE__ ).'">
+					<p style="font-size:20px;color:#5C5C5C;">We have detected different order status. Your order has been halted.</p>
+					<a href="'.site_url().'" style="background-color: #ff0000;border: none;color: white; padding: 15px 32px; text-align: center;text-decoration: none;display: inline-block; font-size: 16px;" >    Back     </a>
+					<br><br>
+					<br><br>
+					</div>
+					</div>
+					</div>';
+					get_footer();
+			  }
 			}
 
 			/**
@@ -306,6 +368,51 @@ if(is_plugin_active( 'woocommerce/woocommerce.php') )
 
 				echo $message;
 			}
+			public function validateOrder($data){
+			   $params = array(
+			   "authentication:1",
+			   'cache-control: no-cache',
+			   );
+				$ch = curl_init();
+				curl_setopt_array($ch, array(
+				CURLOPT_URL => 'https://app.cointopay.com/v2REAPI?',
+				//CURLOPT_USERPWD => $this->apikey,
+				CURLOPT_POSTFIELDS => 'MerchantID='.$data['mid'].'&Call=QA&APIKey=_&output=json&TransactionID='.$data['TransactionID'].'&ConfirmCode='.$data['ConfirmCode'],
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_SSL_VERIFYPEER => false,
+				CURLOPT_HTTPHEADER => $params,
+				CURLOPT_USERAGENT => 1,
+				CURLOPT_HTTPAUTH => CURLAUTH_BASIC
+				)
+				);
+				$response = curl_exec($ch);
+				$results = json_decode($response);
+				if($results->CustomerReferenceNr)
+				{
+					return $results;
+				}
+				else if($response == '"not found"')
+				  {
+					  get_header();
+					   echo '<div class="container" style="text-align: center;"><div><div>
+								<br><br>
+								<h2 style="color:#ff0000">Failure!</h2>
+								<img src="'.plugins_url( 'images/fail.png', __FILE__ ).'">
+								<p style="font-size:20px;color:#5C5C5C;">Your order not found.</p>
+								<a href="'.site_url().'" style="background-color: #ff0000;border: none;color: white; padding: 15px 32px; text-align: center;text-decoration: none;display: inline-block; font-size: 16px;" >    Back     </a>
+								<br><br>
+			
+								</div>
+								</div>
+								</div>';
+								get_footer();
+							  exit;
+				  }
+			   
+				   echo $response;
+				  
+			}
 		}
+		
 	}
 }
