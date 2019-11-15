@@ -166,31 +166,20 @@ if(is_plugin_active( 'woocommerce/woocommerce.php') )
 				'cache-control: no-cache',
 				);
 				$item_name = sprintf( __('Order %s' , 'woocommerce'), $order->get_order_number() ) . " - " . implode(', ', $item_names);
-
-				$ch = curl_init();
-
-				curl_setopt_array($ch, array(
-				CURLOPT_URL => 'https://app.cointopay.com/MerchantAPI?Checkout=true',
-				//CURLOPT_USERPWD => $this->apikey,
-				CURLOPT_POSTFIELDS => 'SecurityCode=' . $this->secret . '&MerchantID=' . $this->merchantid . '&Amount=' . number_format($order->get_total(), 8, '.', '') . '&AltCoinID=' . $this->altcoinid . '&output=json&inputCurrency=' . get_woocommerce_currency() . '&CustomerReferenceNr=' . $order_id . '&returnurl='.rawurlencode(esc_url($this->get_return_url($order))).'&transactionconfirmurl='.site_url('/?wc-api=Cointopay') .'&transactionfailurl='.rawurlencode(esc_url($order->get_cancel_order_url())),
-				CURLOPT_RETURNTRANSFER => true,
-				CURLOPT_SSL_VERIFYPEER => false,
-				CURLOPT_HTTPHEADER => $params,
-				CURLOPT_USERAGENT => $this->apikey,
-				CURLOPT_HTTPAUTH => CURLAUTH_BASIC
-				)
-				);
-
-				$redirect = curl_exec($ch);
-				curl_close($ch);
-				if($redirect){
-					$results = json_decode($redirect);
-					return array(
-					'result' => 'success',
-					'redirect' => $results->RedirectURL
-					);
+                 $params = array(
+            'body' => 'SecurityCode=' . $this->secret . '&MerchantID=' . $this->merchantid . '&Amount=' . number_format($order->get_total(), 8, '.', '') . '&AltCoinID=' . $this->altcoinid . '&output=json&inputCurrency=' . get_woocommerce_currency() . '&CustomerReferenceNr=' . $order_id . '&returnurl='.rawurlencode(esc_url($this->get_return_url($order))).'&transactionconfirmurl='.site_url('/?wc-api=Cointopay') .'&transactionfailurl='.rawurlencode(esc_url($order->get_cancel_order_url())),
+        );
+		         $url = 'https://app.cointopay.com/MerchantAPI?Checkout=true';
+				 $response = wp_safe_remote_post($url, $params);
+				if (!is_wp_error($response) && 200 == $response['response']['code'] && 'OK' == $response['response']['message']) {
+					$results = json_decode($response['body']);
+							return array(
+							'result' => 'success',
+							'redirect' => $results->RedirectURL
+							);
 				}
-			}
+
+		}
 
 			/**
 			* Check for valid Cointopay server callback
@@ -199,17 +188,20 @@ if(is_plugin_active( 'woocommerce/woocommerce.php') )
 			{
 				global $woocommerce;
                 $woocommerce->cart->empty_cart();
-				$Cointopay = $_REQUEST;
-				$order_id = intval($Cointopay['CustomerReferenceNr']);
+				$order_id = intval($_REQUEST['CustomerReferenceNr']);
+				$o_status = sanitize_text_field($_REQUEST['status']);
+				$o_TransactionID = sanitize_text_field($_REQUEST['TransactionID']);
+				$o_ConfirmCode = sanitize_text_field($_REQUEST['ConfirmCode']);
+				$notenough = sanitize_text_field($_REQUEST['notenough']);
 
 				$order = new WC_Order($order_id);
 				$data = [ 
                            'mid' => $this->merchantid , 
-                           'TransactionID' => $_REQUEST['TransactionID'] ,
-                           'ConfirmCode' => $_REQUEST['ConfirmCode']
+                           'TransactionID' => $o_TransactionID ,
+                           'ConfirmCode' => $o_ConfirmCode
                       ];
               $response = $this->validateOrder($data);
-			  if($response->Status !== $_REQUEST['status'])
+			  if($response->Status !== $o_status)
               {
 				  get_header();
                   echo '<div class="container" style="text-align: center;"><div><div>
@@ -225,9 +217,9 @@ if(is_plugin_active( 'woocommerce/woocommerce.php') )
 					get_footer();
                   exit;
               }
-			   else if($response->CustomerReferenceNr == $_REQUEST['CustomerReferenceNr'])
+			   else if($response->CustomerReferenceNr == $order_id)
               {
-				    if ($Cointopay['status'] == 'paid' && $_REQUEST['notenough']==0) {
+				    if ($o_status == 'paid' && $notenough==0) {
 					// Do your magic here, and return 200 OK to Cointopay.
 
 					if ($order->status == 'completed')
@@ -261,7 +253,7 @@ if(is_plugin_active( 'woocommerce/woocommerce.php') )
 					//header('HTTP/1.1 200 OK');
 					exit;
 				}
-				else if ($Cointopay['status'] == 'failed' && $Cointopay['notenough'] == 1) {
+				else if ($o_status == 'failed' && $notenough == 1) {
 
 					$order->update_status( 'on-hold', sprintf( __( 'IPN: Payment failed notification from Cointopay because notenough', 'woocommerce' ) ) );
 					get_header();
@@ -370,23 +362,17 @@ if(is_plugin_active( 'woocommerce/woocommerce.php') )
 			}
 			public function validateOrder($data){
 			   $params = array(
-			   "authentication:1",
-			   'cache-control: no-cache',
-			   );
-				$ch = curl_init();
-				curl_setopt_array($ch, array(
-				CURLOPT_URL => 'https://app.cointopay.com/v2REAPI?',
-				//CURLOPT_USERPWD => $this->apikey,
-				CURLOPT_POSTFIELDS => 'MerchantID='.$data['mid'].'&Call=QA&APIKey=_&output=json&TransactionID='.$data['TransactionID'].'&ConfirmCode='.$data['ConfirmCode'],
-				CURLOPT_RETURNTRANSFER => true,
-				CURLOPT_SSL_VERIFYPEER => false,
-				CURLOPT_HTTPHEADER => $params,
-				CURLOPT_USERAGENT => 1,
-				CURLOPT_HTTPAUTH => CURLAUTH_BASIC
-				)
-				);
-				$response = curl_exec($ch);
-				$results = json_decode($response);
+            'body' => 'MerchantID='.$data['mid'].'&Call=QA&APIKey=_&output=json&TransactionID='.$data['TransactionID'].'&ConfirmCode='.$data['ConfirmCode'],
+			'authentication' => 1,
+			'cache-control' => 'no-cache',
+        );
+
+
+            $url = 'https://app.cointopay.com/v2REAPI?';
+
+         $response = wp_safe_remote_post($url, $params);
+         $results = json_decode($response['body']);
+			   
 				if($results->CustomerReferenceNr)
 				{
 					return $results;

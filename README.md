@@ -25,8 +25,8 @@ There are three prerequisites to get started:
     6. Save changes
 
 Tested on:
-- WordPress 3.8.1 --> 5.2.4
-- WooCommerce 2.1.9 --> 3.7.1
+- WordPress 3.8.1 --> 5.3.0
+- WooCommerce 2.1.9 --> 3.8.0
 
 ### Notes:
 - Please note that the default checkout currency is Bitcoin, the customer can pay via other currencies as well by clicking the currency icon. Enable other currencies on Cointopay.com by going to Account > Wallet preferences and selecting multiple currencies.
