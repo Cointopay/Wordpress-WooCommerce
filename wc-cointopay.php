@@ -1,7 +1,7 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 /*
-Plugin Name: WooCommerce Cointopay.com
+Plugin Name: Wowcommerce Cointopay.com
 Description: Extends WooCommerce with crypto payments gateway.
 Version: 0.2
 Author: Cointopay
