@@ -1,6 +1,6 @@
 # Cointopay.com plugin for: Wordpress WooCommerce
 
-Crypto currency payment plugin for Wordpress WooCommerce, you can receive crypto currencies for your products and services as alternative to e.g. Paypal. Cointopay receives the currencies into your account on Cointopay.com. Optional: we can payout to your bank in EURO without volatility risk for you.
+Crypto currency payment plugin for Wordpress WooCommerce, you can receive crypto currencies for your products and services as alternative to e.g. Bitcoin, Litecoin, Ethereum, Ripple. Cointopay receives the currencies into your account on Cointopay.com. Optional: we can payout to your bank in EURO without volatility risk for you.
 
 There are three prerequisites to get started:
 
@@ -10,10 +10,6 @@ There are three prerequisites to get started:
 
 # Version:
 - Version 0.2
-
-# Improvements in 0.2:
-- You do not need to configure your ConfirmationURL any longer. FYI: The wc-api is automatically set to Cointopay (?wc-api=Cointopay)
-- Beautiful redirect message once payment is confirmed
 
 # Configuration Instructions
 
@@ -29,7 +25,7 @@ Tested on:
 - WooCommerce 2.1.9 --> 3.8.0
 
 ### Notes:
-- Please note that the default checkout currency is Bitcoin, the customer can pay via other currencies as well by clicking the currency icon. Enable other currencies on Cointopay.com by going to Account > Wallet preferences and selecting multiple currencies.
+- Please note that the default checkout currency is Bitcoin, the customer can pay via other currencies as well by clicking the currency icon. Enable other currencies on Cointopay.com by going to Account > Wallet preferences and selecting multiple currencies e.g. Bitcoin, Litecoin, Ethereum, Ripple etc.
 - We set a paid, on hold and cancelled, a partial payment stays on hold in WooCommerce. You will receive the partial payment in your account on Cointopay.com. Payment notifications via IPN messaging.
 
 If you have any questions, please send them to support@cointopay.com, we do appreciate a mail when you are going live so we can monitor your go-live as well.
@@ -39,5 +35,4 @@ Thank you for being our customer, we look forward to working together.
 ### FOR DEVELOPERS AND SALES REPS
 PLEASE NOTE OUR AFFILIATE PROGRAM, YOU RECEIVE 0.5% OF ALL YOUR REFERRALS!
 Create an account on Cointopay.com and send your prospects the following link: https://cointopay.com/?r=[yourmerchantid], you will receive mails when payments come into your account. 
-
 
