@@ -2,7 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 /*
 Plugin Name: Wowcommerce Cointopay.com
-Description: Extends WooCommerce with crypto payments gateway.
+Description: Extends WooCommerce with crypto payments gateway. Checkout with Bitcoin, Litecoin, Ethereum, Ripple and many more!
 Version: 0.2
 Author: Cointopay
 */
