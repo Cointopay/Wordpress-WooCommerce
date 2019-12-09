@@ -9,7 +9,7 @@ There are three prerequisites to get started:
 - Install JSON Encode on your server
 
 # Version:
-- Version 0.2
+- Version 1.2
 
 # Configuration Instructions
 
@@ -23,6 +23,12 @@ There are three prerequisites to get started:
 Tested on:
 - WordPress 3.8.1 --> 5.3.0
 - WooCommerce 2.1.9 --> 3.8.0
+
+# Changelog
+
+### 2019-12-06 - Version 1.2
+- Enhancement - Just making things look better v1.2
+
 
 ### Notes:
 - Please note that the default checkout currency is Bitcoin, the customer can pay via other currencies as well by clicking the currency icon. Enable other currencies on Cointopay.com by going to Account > Wallet preferences and selecting multiple currencies e.g. Bitcoin, Litecoin, Ethereum, Ripple etc.
