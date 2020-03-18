@@ -9,7 +9,7 @@ There are three prerequisites to get started:
 - Install JSON Encode on your server
 
 # Version:
-- Version 1.2
+- Version 1.3
 
 # Configuration Instructions
 
@@ -22,7 +22,7 @@ There are three prerequisites to get started:
 
 Tested on:
 - WordPress 3.8.1 --> 5.3.0
-- WooCommerce 2.1.9 --> 3.8.0
+- WooCommerce 2.1.9 --> 4.0
 
 # Changelog
 
