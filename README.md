@@ -1,5 +1,7 @@
 # Cointopay.com plugin for: Wordpress WooCommerce
 
+Sourcecode for public release located here: https://wordpress.org/plugins/wc-cointopay-com/
+
 Crypto currency payment plugin for Wordpress WooCommerce, you can receive crypto currencies for your products and services as alternative to e.g. Bitcoin, Litecoin, Ethereum, Ripple. Cointopay receives the currencies into your account on Cointopay.com. Optional: we can payout to your bank in EURO without volatility risk for you.
 
 There are three prerequisites to get started:
