@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WooCommerce Cointopay.com
  * Description: Extends WooCommerce with crypto payments gateway.
- * Version: 1.3
+ * Version: 1.4
  * Author: Cointopay, Therightsw
  *
  * @package  WooCommerce
@@ -69,7 +69,7 @@ if (is_plugin_active('woocommerce/woocommerce.php') === true) {
 		 **/
 		public function __construct() {
 			$this->id   = 'cointopay';
-			$this->icon = plugins_url('assets/images/crypto.png', __FILE__);
+			$this->icon = plugins_url('images/crypto.png', __FILE__);
 
 			$this->init_form_fields();
 			$this->init_settings();
@@ -252,13 +252,40 @@ if (is_plugin_active('woocommerce/woocommerce.php') === true) {
 				'TransactionID' => $ordtransactionid,
 				'ConfirmCode'   => $ordconfirmcode,
 			);
-			$response = $this->validate_order($data);
-			if ($response->Status !== $ordstatus) {
+			$transactionData = $this->validate_order($data);
+			if(200 !== $transactionData['status_code']){
 				get_header();
-				echo '<div class="container" style="text-align: center;"><div><div><br><br><h2 style="color:#ff0000">Failure!</h2><img src="' . esc_url(plugins_url('assets/images/fail.png', __FILE__)) . '"><p style="font-size:20px;color:#5C5C5C;">We have detected different order status. Your order has been halted.</p><a href="' . esc_url(site_url()) . '" style="background-color: #ff0000;border: none;color: white; padding: 15px 32px; text-align: center;text-decoration: none;display: inline-block; font-size: 16px;" >Back</a><br><br></div></div></div>';
+				echo '<div class="container" style="text-align: center;"><div><div><br><br><h2 style="color:#ff0000">Failure!</h2><img style="margin:auto;"  src="' . esc_url(plugins_url('images/fail.png', __FILE__)) . '"><p style="font-size:20px;color:#5C5C5C;">'.$transactionData['message'] .'</p><a href="' . esc_url(site_url()) . '" style="background-color: #ff0000;border: none;color: white; padding: 15px 32px; text-align: center;text-decoration: none;display: inline-block; font-size: 16px;" >Back</a><br><br></div></div></div>';
+				 get_footer();
+					exit;
+			}
+			else{
+				if($transactionData['data']['Security'] != $ordconfirmcode){
+					get_header();
+				echo '<div class="container" style="text-align: center;"><div><div><br><br><h2 style="color:#ff0000">Failure!</h2><img style="margin:auto;"  src="' . esc_url(plugins_url('images/fail.png', __FILE__)) . '"><p style="font-size:20px;color:#5C5C5C;">Data mismatch! ConfirmCode doesn\'t match</p><a href="' . esc_url(site_url()) . '" style="background-color: #ff0000;border: none;color: white; padding: 15px 32px; text-align: center;text-decoration: none;display: inline-block; font-size: 16px;" >Back</a><br><br></div></div></div>';
 				get_footer();
-				exit;
-			} elseif ($response->CustomerReferenceNr === $orderid) {
+					exit;
+				}
+				elseif($transactionData['data']['CustomerReferenceNr'] != $orderid){
+					get_header();
+				echo '<div class="container" style="text-align: center;"><div><div><br><br><h2 style="color:#ff0000">Failure!</h2><img style="margin:auto;"  src="' . esc_url(plugins_url('images/fail.png', __FILE__)) . '"><p style="font-size:20px;color:#5C5C5C;">Data mismatch! CustomerReferenceNr doesn\'t match</p><a href="' . esc_url(site_url()) . '" style="background-color: #ff0000;border: none;color: white; padding: 15px 32px; text-align: center;text-decoration: none;display: inline-block; font-size: 16px;" >Back</a><br><br></div></div></div>';
+				get_footer();
+					exit;
+				}
+				elseif($transactionData['data']['TransactionID'] != $ordtransactionid){
+					get_header();
+				echo '<div class="container" style="text-align: center;"><div><div><br><br><h2 style="color:#ff0000">Failure!</h2><img style="margin:auto;"  src="' . esc_url(plugins_url('images/fail.png', __FILE__)) . '"><p style="font-size:20px;color:#5C5C5C;">Data mismatch! TransactionID doesn\'t match</p><a href="' . esc_url(site_url()) . '" style="background-color: #ff0000;border: none;color: white; padding: 15px 32px; text-align: center;text-decoration: none;display: inline-block; font-size: 16px;" >Back</a><br><br></div></div></div>';
+				get_footer();
+					exit;
+				}
+				elseif($transactionData['data']['Status'] != $ordstatus){
+					get_header();
+				echo '<div class="container" style="text-align: center;"><div><div><br><br><h2 style="color:#ff0000">Failure!</h2><img style="margin:auto;"  src="' . esc_url(plugins_url('images/fail.png', __FILE__)) . '"><p style="font-size:20px;color:#5C5C5C;">Data mismatch! status doesn\'t match. Your order status is '. $transactionData['data']['Status'].'</p><a href="' . esc_url(site_url()) . '" style="background-color: #ff0000;border: none;color: white; padding: 15px 32px; text-align: center;text-decoration: none;display: inline-block; font-size: 16px;" >Back</a><br><br></div></div></div>';
+				get_footer();
+					exit;
+				}
+
+				}
 				if (( 'paid' === $ordstatus ) && ( 0 === $notenough )) {
 					// Do your magic here, and return 200 OK to Cointopay.
 					if ('completed' === $order->status) {
@@ -269,33 +296,23 @@ if (is_plugin_active('woocommerce/woocommerce.php') === true) {
 					}
 
 					get_header();
-					echo '<div class="container" style="text-align: center;"><div><div><br><br><h2 style="color:#0fad00">Success!</h2><img src="' . esc_url(plugins_url('assets/images/check.png', __FILE__)) . '"><p style="font-size:20px;color:#5C5C5C;">The payment has been received and confirmed successfully.</p><a href="' . esc_url(site_url()) . '" style="background-color: #0fad00;border: none;color: white; padding: 15px 32px; text-align: center;text-decoration: none;display: inline-block; font-size: 16px;" >Back</a><br><br><br><br></div></div></div>';
+					echo '<div class="container" style="text-align: center;"><div><div><br><br><h2 style="color:#0fad00">Success!</h2><img style="margin:auto;"  src="' . esc_url(plugins_url('images/check.png', __FILE__)) . '"><p style="font-size:20px;color:#5C5C5C;">The payment has been received and confirmed successfully.</p><a href="' . esc_url(site_url()) . '" style="background-color: #0fad00;border: none;color: white; padding: 15px 32px; text-align: center;text-decoration: none;display: inline-block; font-size: 16px;" >Back</a><br><br><br><br></div></div></div>';
 					get_footer();
 					exit;
 				} elseif ('failed' === $ordstatus && 1 === $notenough) {
 					$order->update_status('on-hold', sprintf(__('IPN: Payment failed notification from Cointopay because notenough', 'woocommerce')));
 					get_header();
-					echo '<div class="container" style="text-align: center;"><div><div><br><br><h2 style="color:#ff0000">Failure!</h2><img src="' . esc_url(plugins_url('assets/images/fail.png', __FILE__)) . '"><p style="font-size:20px;color:#5C5C5C;">The payment has been failed.</p><a href="' . esc_url(site_url()) . '" style="background-color: #ff0000;border: none;color: white; padding: 15px 32px; text-align: center;text-decoration: none;display: inline-block; font-size: 16px;" >Back</a><br><br><br><br></div></div></div>';
+					echo '<div class="container" style="text-align: center;"><div><div><br><br><h2 style="color:#ff0000">Failure!</h2><img style="margin:auto;"  src="' . esc_url(plugins_url('images/fail.png', __FILE__)) . '"><p style="font-size:20px;color:#5C5C5C;">The payment has been failed.</p><a href="' . esc_url(site_url()) . '" style="background-color: #ff0000;border: none;color: white; padding: 15px 32px; text-align: center;text-decoration: none;display: inline-block; font-size: 16px;" >Back</a><br><br><br><br></div></div></div>';
 					get_footer();
 					exit;
 				} else {
 					$order->update_status('failed', sprintf(__('IPN: Payment failed notification from Cointopay', 'woocommerce')));
 					get_header();
-					echo '<div class="container" style="text-align: center;"><div><div><br><br><h2 style="color:#ff0000">Failure!</h2><img src="' . esc_url(plugins_url('assets/images/fail.png', __FILE__)) . '"><p style="font-size:20px;color:#5C5C5C;">The payment has been failed.</p><a href="' . esc_url(site_url()) . '" style="background-color:#ff0000;border:none;color: white;padding:15px 32px;text-align: center;text-decoration:none;display:inline-block;font-size:16px;">Back</a><br><br><br><br></div></div></div>';
+					echo '<div class="container" style="text-align: center;"><div><div><br><br><h2 style="color:#ff0000">Failure!</h2><img style="margin:auto;"  src="' . esc_url(plugins_url('images/fail.png', __FILE__)) . '"><p style="font-size:20px;color:#5C5C5C;">The payment has been failed.</p><a href="' . esc_url(site_url()) . '" style="background-color:#ff0000;border:none;color: white;padding:15px 32px;text-align: center;text-decoration:none;display:inline-block;font-size:16px;">Back</a><br><br><br><br></div></div></div>';
 					get_footer();
 					exit;
 				}//end if
-			} elseif ('not found' === $response) {
-				$order->update_status('failed', sprintf(__('We have detected different order status. Your order has not been found.', 'woocommerce')));
-				get_header();
-				echo '<div class="container" style="text-align: center;"><div><div><br><br><h2 style="color:#ff0000">Failure!</h2><img src="' . esc_url(plugins_url('assets/images/fail.png', __FILE__)) . '"><p style="font-size:20px;color:#5C5C5C;">We have detected different order status. Your order has not been found..</p><a href="' . esc_url(site_url()) . '" style="background-color: #ff0000;border: none;color: white; padding: 15px 32px; text-align: center;text-decoration: none;display: inline-block; font-size: 16px;">Back</a><br><br><br><br></div></div></div>';
-				get_footer();
-			} else {
-				$order->update_status('failed', sprintf(__('We have detected different order status. Your order has been halted.', 'woocommerce')));
-				get_header();
-				echo '<div class="container" style="text-align: center;"><div><div><br><br><h2 style="color:#ff0000">Failure!</h2><img src="' . esc_url(plugins_url('assets/images/fail.png', __FILE__)) . '"><p style="font-size:20px;color:#5C5C5C;">We have detected different order status. Your order has been halted.</p><a href="' . esc_url(site_url()) . '" style="background-color: #ff0000;border: none;color: white; padding: 15px 32px; text-align: center;text-decoration: none;display: inline-block; font-size: 16px;">Back</a><br><br><br><br></div></div></div>';
-				get_footer();
-			}//end if
+			
 
 		}//end check_cointopay_response()
 
@@ -344,7 +361,7 @@ if (is_plugin_active('woocommerce/woocommerce.php') === true) {
 		 **/
 		public function validate_order( $data) {
 			$params = array(
-				'body'           => 'MerchantID=' . $data['mid'] . '&Call=QA&APIKey=_&output=json&TransactionID=' . $data['TransactionID'] . '&ConfirmCode=' . $data['ConfirmCode'],
+				'body'           => 'MerchantID=' . $data['mid'] . '&Call=Transactiondetail&APIKey=a&output=json&ConfirmCode=' . $data['ConfirmCode'],
 				'authentication' => 1,
 				'cache-control'  => 'no-cache',
 			);
@@ -352,18 +369,9 @@ if (is_plugin_active('woocommerce/woocommerce.php') === true) {
 			$url = 'https://app.cointopay.com/v2REAPI?';
 
 			$response = wp_safe_remote_post($url, $params);
-			$results  = json_decode($response['body']);
+			$results  = json_decode($response['body'], true);
 
-			if (true === $results->CustomerReferenceNr) {
-				return $results;
-			} elseif ('"not found"' === $response) {
-				get_header();
-				echo '<div class="container" style="text-align: center;"><div><div><br><br><h2 style="color:#ff0000">Failure!</h2><img src="' . esc_url(plugins_url('assets/images/fail.png', __FILE__)) . '"><p style="font-size:20px;color:#5C5C5C;">Your order not found.</p><a href="' . esc_url(site_url()) . '" style="background-color:#ff0000;border:none;color:white;padding: 15px 32px;text-align: center;text-decoration:none;display:inline-block;font-size:16px;">Back</a><br><br></div></div></div>';
-				get_footer();
-				exit;
-			}
-
-			echo esc_html($response);
+			return $results;
 
 		}//end validate_order()
 

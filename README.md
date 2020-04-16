@@ -10,8 +10,10 @@ There are three prerequisites to get started:
 - Install the Curl PHP Extension on your server
 - Install JSON Encode on your server
 
+Please follow the Wordpress WooCommerce Cointopay Plugin install instructions mentioned here: https://docs.google.com/document/d/1L3Fv1t11SmhuX0jmOQ1bkQl20RrHtx36dH0XKTzbNyI/edit?usp=sharing
+
 # Version:
-- Version 1.3
+- Version 1.4
 
 # Configuration Instructions
 
@@ -23,8 +25,8 @@ There are three prerequisites to get started:
     6. Save changes
 
 Tested on:
-- WordPress 3.8.1 --> 5.3.0
-- WooCommerce 2.1.9 --> 4.0
+- WordPress 3.8.1 --> 5.4
+- WooCommerce 2.1.9 --> 4.0.1
 
 # Changelog
 
