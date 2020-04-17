@@ -244,7 +244,7 @@ if (is_plugin_active('woocommerce/woocommerce.php') === true) {
 			$ordstatus        = ( !empty(sanitize_text_field($_REQUEST['status'])) ) ? sanitize_text_field($_REQUEST['status']) : '';
 			$ordtransactionid = ( !empty(sanitize_text_field($_REQUEST['TransactionID'])) ) ? sanitize_text_field($_REQUEST['TransactionID']) : '';
 			$ordconfirmcode   = ( !empty(sanitize_text_field($_REQUEST['ConfirmCode'])) ) ? sanitize_text_field($_REQUEST['ConfirmCode']) : '';
-			$notenough        = ( !empty(sanitize_text_field($_REQUEST['notenough'])) ) ? sanitize_text_field($_REQUEST['notenough']) : '';
+			$notenough        = ( !empty(sanitize_text_field($_REQUEST['notenough'])) ) ? intval(sanitize_text_field($_REQUEST['notenough'])) : 0;
 
 			$order    = new WC_Order($orderId);
 			$data     = array(
