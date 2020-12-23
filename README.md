@@ -25,8 +25,8 @@ Please follow the Wordpress WooCommerce Cointopay Plugin install instructions me
     6. Save changes
 
 Tested on:
-- WordPress 3.8.1 --> 5.4
-- WooCommerce 2.1.9 --> 4.0.1
+- WordPress 3.8.1 --> 5.6.0
+- WooCommerce 2.1.9 --> 4.8.0
 
 # Changelog
 
