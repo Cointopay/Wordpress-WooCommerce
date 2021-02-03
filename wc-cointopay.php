@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WooCommerce Cointopay.com
  * Description: Extends WooCommerce with crypto payments gateway.
- * Version: 1.3
+ * Version: 1.3.1
  * Author: Cointopay
  *
  * @author   Cointopay <info@cointopay.com>
@@ -245,7 +245,7 @@ if (is_plugin_active('woocommerce/woocommerce.php') === true) {
 			$ordconfirmcode   = ( !empty(sanitize_text_field($_REQUEST['ConfirmCode'])) ) ? sanitize_text_field($_REQUEST['ConfirmCode']) : '';
 			$notenough        = ( isset($_REQUEST['notenough']) ) ? intval($_REQUEST['notenough']) : '';
 
-			$order    = new WC_Order($orderId);
+			$order    = new WC_Order($orderid);
 			$data     = array(
 				'mid'           => $this->merchantid,
 				'TransactionID' => $ordtransactionid,
@@ -293,6 +293,10 @@ if (is_plugin_active('woocommerce/woocommerce.php') === true) {
 						$order->payment_complete();
 						$order->update_status('completed', sprintf(__('IPN: Payment completed notification from Cointopay', 'woocommerce')));
 					}
+					
+					$order->save();
+					
+					$order->add_order_note( __( 'IPN: Update status event for Cointopay to status COMPLETED:', 'woocommerce' ) . ' ' . $orderid);
 
 					get_header();
 					echo '<div class="container" style="text-align: center;"><div><div><br><br><h2 style="color:#0fad00">Success!</h2><img style="margin:auto;"  src="' . esc_url(plugins_url('images/check.png', __FILE__)) . '"><p style="font-size:20px;color:#5C5C5C;">The payment has been received and confirmed successfully.</p><a href="' . esc_url(site_url()) . '" style="background-color: #0fad00;border: none;color: white; padding: 15px 32px; text-align: center;text-decoration: none;display: inline-block; font-size: 16px;" >Back</a><br><br><br><br></div></div></div>';
