@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WooCommerce Cointopay.com
  * Description: Extends WooCommerce with crypto payments gateway.
- * Version: 1.2
+ * Version: 1.3
  * Author: Cointopay
  *
  * @author   Cointopay <info@cointopay.com>
@@ -243,7 +243,7 @@ if (is_plugin_active('woocommerce/woocommerce.php') === true) {
 			$ordstatus        = ( !empty(sanitize_text_field($_REQUEST['status'])) ) ? sanitize_text_field($_REQUEST['status']) : '';
 			$ordtransactionid = ( !empty(sanitize_text_field($_REQUEST['TransactionID'])) ) ? sanitize_text_field($_REQUEST['TransactionID']) : '';
 			$ordconfirmcode   = ( !empty(sanitize_text_field($_REQUEST['ConfirmCode'])) ) ? sanitize_text_field($_REQUEST['ConfirmCode']) : '';
-			$notenough        = ( !empty(intval($_REQUEST['notenough'])) ) ? intval($_REQUEST['notenough']) : '';
+			$notenough        = ( isset($_REQUEST['notenough']) ) ? intval($_REQUEST['notenough']) : '';
 
 			$order    = new WC_Order($orderId);
 			$data     = array(
@@ -288,10 +288,10 @@ if (is_plugin_active('woocommerce/woocommerce.php') === true) {
 				if (( 'paid' === $ordstatus ) && ( 0 === $notenough )) {
 					// Do your magic here, and return 200 OK to Cointopay.
 					if ('completed' === $order->status) {
-						$order->update_status('processing', sprintf(__('IPN: Payment completed notification from Cointopay', 'woocommerce')));
+						$order->update_status('completed', sprintf(__('IPN: Payment completed notification from Cointopay', 'woocommerce')));
 					} else {
 						$order->payment_complete();
-						$order->update_status('processing', sprintf(__('IPN: Payment completed notification from Cointopay', 'woocommerce')));
+						$order->update_status('completed', sprintf(__('IPN: Payment completed notification from Cointopay', 'woocommerce')));
 					}
 
 					get_header();
