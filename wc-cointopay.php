@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WooCommerce Cointopay.com
  * Description: Extends WooCommerce with crypto payments gateway.
- * Version: 1.3.1
+ * Version: 1.3.2
  * Author: Cointopay
  *
  * @author   Cointopay <info@cointopay.com>
@@ -287,7 +287,7 @@ if (is_plugin_active('woocommerce/woocommerce.php') === true) {
 				}
 				if (( 'paid' === $ordstatus ) && ( 0 === $notenough )) {
 					// Do your magic here, and return 200 OK to Cointopay.
-					if ('completed' === $order->status) {
+					if ('processing' === $order->status) {
 						$order->update_status('processing', sprintf(__('IPN: Payment completed notification from Cointopay', 'woocommerce')));
 					} else {
 						$order->payment_complete();
