@@ -288,10 +288,10 @@ if (is_plugin_active('woocommerce/woocommerce.php') === true) {
 				if (( 'paid' === $ordstatus ) && ( 0 === $notenough )) {
 					// Do your magic here, and return 200 OK to Cointopay.
 					if ('completed' === $order->status) {
-						$order->update_status('completed', sprintf(__('IPN: Payment completed notification from Cointopay', 'woocommerce')));
+						$order->update_status('processing', sprintf(__('IPN: Payment completed notification from Cointopay', 'woocommerce')));
 					} else {
 						$order->payment_complete();
-						$order->update_status('completed', sprintf(__('IPN: Payment completed notification from Cointopay', 'woocommerce')));
+						$order->update_status('processing', sprintf(__('IPN: Payment completed notification from Cointopay', 'woocommerce')));
 					}
 					
 					$order->save();
