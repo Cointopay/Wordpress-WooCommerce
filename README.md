@@ -13,7 +13,7 @@ There are three prerequisites to get started:
 Please follow the Wordpress WooCommerce Cointopay Plugin install instructions mentioned here: https://docs.google.com/document/d/1L3Fv1t11SmhuX0jmOQ1bkQl20RrHtx36dH0XKTzbNyI/edit?usp=sharing
 
 # Version:
-- Version 1.3.4
+- Version 1.3.5
 
 # Configuration Instructions
 
@@ -25,8 +25,8 @@ Please follow the Wordpress WooCommerce Cointopay Plugin install instructions me
     6. Save changes
 
 Tested on:
-- WordPress 3.8.1 --> 5.8.0
-- WooCommerce 2.1.9 --> 5.4.1
+- WordPress 3.8.1 --> 5.8.1
+- WooCommerce 2.1.9 --> 5.8.0
 
 # Changelog
 
