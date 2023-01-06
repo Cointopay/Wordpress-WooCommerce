@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WooCommerce Cointopay.com
  * Description: Extends WooCommerce with crypto payments gateway.
- * Version: 1.3.7
+ * Version: 1.3.8
  * Author: Cointopay
  *
  * @author   Cointopay <info@cointopay.com>
@@ -12,8 +12,8 @@
 defined('ABSPATH') || exit;
 
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
-require_once ABSPATH . 'wp-content/plugins/woocommerce/woocommerce.php';
 if (is_plugin_active('woocommerce/woocommerce.php') === true) {
+	require_once ABSPATH . 'wp-content/plugins/woocommerce/woocommerce.php';
 	// Add the Gateway to WooCommerce.
 	add_filter('woocommerce_payment_gateways', 'wc_ctp_gateway');
 	add_action('plugins_loaded', 'woocommerce_cointopay_init', 0);
@@ -60,9 +60,6 @@ if (is_plugin_active('woocommerce/woocommerce.php') === true) {
 	 * @link     cointopay.com
 	 */
 	class Cointopay extends WC_Payment_Gateway {
-	
-
-
 		/**
 		 * Define Cointopay Class constructor
 		 **/
@@ -326,11 +323,11 @@ if (is_plugin_active('woocommerce/woocommerce.php') === true) {
 		 * @return string Error Mensage.
 		 */
 		public function apikey_missingmessage() {
-			$message  = '<div class="error">';
+			$message  = '<div class="notice notice-info is-dismissible">';
 			$message .= '<p><strong>Gateway Disabled</strong> You should enter your API key in Cointopay configuration. <a href="' . get_admin_url() . 'admin.php?page=wc-settings&amp;tab=checkout&amp;section=cointopay">Click here to configure</a></p>';
 			$message .= '</div>';
 
-			echo esc_html($message);
+			echo $message;
 
 		}//end apikey_missingmessage()
 
@@ -341,11 +338,11 @@ if (is_plugin_active('woocommerce/woocommerce.php') === true) {
 		 * @return String Error Mensage.
 		 */
 		public function secret_missingmessage() {
-			$message  = '<div class="error">';
-			$message .= '<p><strong>Gateway Disabled</strong> You should check your SecurityCode in Cointopay configuration. <a href="' . get_admin_url() . 'admin.php?page=wc-settings&amp;tab=checkout&amp;section=cointopay">Click here to configure!</a></p>';
+			$message  = '<div class="notice notice-info is-dismissible">';
+			$message .= '<p><strong>Gateway Disabled</strong> You should check your MerchantID and SecurityCode in Cointopay configuration. <a href="' . get_admin_url() . 'admin.php?page=wc-settings&amp;tab=checkout&amp;section=cointopay">Click here to configure!</a></p>';
 			$message .= '</div>';
 
-			echo esc_html($message);
+			echo $message;
 
 		}//end secret_missingmessage()
 
