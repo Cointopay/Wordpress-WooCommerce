@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WooCommerce Cointopay.com
  * Description: Extends WooCommerce with crypto payments gateway.
- * Version: 1.3.8
+ * Version: 1.3.9
  * Author: Cointopay
  *
  * @author   Cointopay <info@cointopay.com>
@@ -72,7 +72,7 @@ if (is_plugin_active('woocommerce/woocommerce.php') === true) {
 
 			$this->title       = $this->get_option('title');
 			$this->description = $this->get_option('description');
-			$this->altcoinid   = $this->get_option('altcoinid');
+			$this->altcoinid   = 666;
 			$this->merchantid  = $this->get_option('merchantid');
 
 			$this->apikey         = '1';
@@ -83,6 +83,13 @@ if (is_plugin_active('woocommerce/woocommerce.php') === true) {
 			add_action('init', array(&$this, 'check_cointopay_response'));
 			add_action('woocommerce_update_options_payment_gateways_' . $this->id, array(&$this, 'process_admin_options'));
 			add_action('woocommerce_api_' . strtolower(get_class($this)), array( &$this, 'check_cointopay_response' ));
+			add_action('wp_enqueue_scripts', array(&$this, 'Cointopay_Crypto_Gateway_admin_js' ));
+		
+			
+			add_action('woocommerce_after_order_notes', array(&$this, 'cointopay_crypto_select_checkout_field' ));
+			add_action('woocommerce_checkout_process', array(&$this, 'cointopay_crypto_process_custom_payment' ));
+			add_action( 'woocommerce_after_order_notes', array(&$this, 'cointopay_crypto_checkout_hidden_field' ), 10, 1 );
+			add_action('woocommerce_checkout_update_order_meta', array(&$this, 'cointopay_crypto_select_checkout_update_order_meta' ));
 
 			// Valid for use.
 			if (empty($this->settings['enabled']) === false && empty($this->apikey) === false && empty($this->secret) === false) {
@@ -134,12 +141,6 @@ if (is_plugin_active('woocommerce/woocommerce.php') === true) {
 					'type'        => 'text',
 					'description' => __('Please enter your Cointopay Merchant ID, You can get this information in: <a href="' . esc_url( 'https://cointopay.com' ) . '" target="_blank">Cointopay Account</a>.', 'Cointopay'),
 					'default'     => '',
-				),
-				'altcoinid'   => array(
-					'title'       => __('Default Checkout AltCoinID', 'Cointopay'),
-					'type'        => 'text',
-					'description' => __('Please enter your Preferred AltCoinID (1 for bitcoin), You can get this information in: <a href="' . esc_url( 'https://cointopay.com' ) . '" target="_blank">Cointopay Account</a>.', 'Cointopay'),
-					'default'     => '1',
 				),
 				'secret'      => array(
 					'title'       => __('SecurityCode', 'Cointopay'),
@@ -197,6 +198,7 @@ if (is_plugin_active('woocommerce/woocommerce.php') === true) {
 		public function process_payment( $orderid) {
 			global $woocommerce;
 			$order = wc_get_order($orderid);
+			$this->altcoinid = get_post_meta( $orderid, 'cointopay_crypto_alt_coin', true);
 
 			$itemnames = array();
 
@@ -221,7 +223,7 @@ if (is_plugin_active('woocommerce/woocommerce.php') === true) {
 				$results = json_decode($response['body']);
 				return array(
 					'result'   => 'success',
-					'redirect' => $results->shortURL,
+					'redirect' => $results->shortURL . "?crypto=1",
 				);
 			}
 
@@ -374,8 +376,106 @@ if (is_plugin_active('woocommerce/woocommerce.php') === true) {
 			return $results;
 
 		}//end validate_order()
+		
+		public function Cointopay_Crypto_Gateway_admin_js() {
+			wp_enqueue_script( 'ctp-crypto-custom-js', plugins_url('js/ctp_crypto_custom_js.js', __FILE__), array(), '1.0.0', true );
+			wp_localize_script( 'ctp-crypto-custom-js', 'ajaxurlctp', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ))); 
+		}
+		
+		
+		//* Do NOT include the opening php tag shown above. Copy the code shown below.
+
+		//* Add select field to the checkout page
+		
+		public function cointopay_crypto_select_checkout_field( $checkout ) {
+				
+				if($this->enabled === 'yes' && $this->merchantid !== ''){
+					// The user link
+					$cointopay_crypto_merchant_id = $this->merchantid;
+
+					woocommerce_form_field( 'cointopay_crypto_alt_coin', array(
+						'type'          => 'select',
+						'class'         => array( 'cointopay_crypto_alt_coin' ),
+						'label'         => __( 'Crypto Selection for Cointopay Woocommerce' ),
+						'options'       => array(
+						'blank'		=> __( 'Select Alt Coin', 'woocommerce' ),
+						)
+				 ),
+
+					$checkout->get_value( 'cointopay_crypto_alt_coin' ));
+				}
+		}
+		
+		public function cointopay_crypto_process_custom_payment(){
+			if($_POST['payment_method'] != 'cointopay')
+				return;
+
+			if( !isset($_POST['cointopay_crypto_alt_coin']) || empty($_POST['cointopay_crypto_alt_coin']) )
+				wc_add_notice( __( 'Please select valid Alt Coin', $this->domain ), 'error' );
+
+		}
+		//* Do NOT include the opening php tag shown above. Copy the code shown below.
+		//* Update the order meta with field value
+		 
+		 public function cointopay_crypto_select_checkout_update_order_meta( $order_id ) {
+			if (isset($_POST['cointopay_crypto_alt_coin']) && $_POST['payment_method'] == 'cointopay') update_post_meta( $order_id, 'cointopay_crypto_alt_coin', sanitize_text_field($_POST['cointopay_crypto_alt_coin']));
+		 }
+		
+		public function cointopay_crypto_checkout_hidden_field( $checkout ) {
+			
+				if($this->enabled === 'yes' && $this->merchantid !== ''){
+					// The user link
+					$cointopay_crypto_merchant_id = $this->merchantid;
+
+					// Output the hidden link
+				   echo '<input type="hidden" class="input-hidden" name="cointopay_crypto_merchant_id" id="cointopay_crypto_merchant_id" value="' . $cointopay_crypto_merchant_id . '" />';
+				}
+		}
 
 
 	}//end class
+		add_action( 'wp_ajax_nopriv_getCTPMerchantCoinsByAjax', 'getCTPMerchantCoinsByAjax' );
+		add_action( 'wp_ajax_getCTPMerchantCoinsByAjax', 'getCTPMerchantCoinsByAjax' );
+		function getCTPMerchantCoinsByAjax()
+		{
+			$merchantId = 0;
+			$merchantId = intval($_REQUEST['merchant']);
+			if(isset($merchantId) && $merchantId !== 0)
+			{
+				$option = '';
+				$arr = getCTPMerchantCoins($merchantId);
+				foreach($arr as $key => $value)
+				{
+					$option .= '<option value="'.$key.'">'.$value.'</option>';
+				}
+				
+				echo $option;exit();
+			}
+		}
 
+		function getCTPMerchantCoins($merchantId)
+		{
+			$params = array(
+				'body' => 'MerchantID=' . $merchantId . '&output=json',
+			);
+			$url = 'https://cointopay.com/CloneMasterTransaction';
+			$response  = wp_safe_remote_post($url, $params);
+			if (( false === is_wp_error($response) ) && ( 200 === $response['response']['code'] ) && ( 'OK' === $response['response']['message'] )) {
+				$php_arr = json_decode($response['body']);
+				$new_php_arr = array();
+
+				if(!empty($php_arr))
+				{
+					for($i=0;$i<count($php_arr)-1;$i++)
+					{
+						if(($i%2)==0)
+						{
+							$new_php_arr[$php_arr[$i+1]] = $php_arr[$i];
+						}
+					}
+				}
+				
+				return $new_php_arr;
+			}
+		}
 }//end if
