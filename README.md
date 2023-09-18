@@ -6,27 +6,26 @@ Crypto currency payment plugin for Wordpress WooCommerce, you can receive crypto
 
 There are three prerequisites to get started:
 
-- Please create an account on Cointopay.com, note down MerchantID, SecurityCode and AltCoinID as preferred checkout currency from the Account section (1 = bitcoin, 2 = litecoin etc.)
+- Please create an account on Cointopay.com, note down MerchantID and SecurityCode.
 - Install the Curl PHP Extension on your server
 - Install JSON Encode on your server
 
 Please follow the Wordpress WooCommerce Cointopay Plugin install instructions mentioned here: https://docs.google.com/document/d/1L3Fv1t11SmhuX0jmOQ1bkQl20RrHtx36dH0XKTzbNyI/edit?usp=sharing
 
 # Version:
-- Version 1.3.9
+- Version 1.4.0
 
 # Configuration Instructions
 
     1. Install zip file using WordPress built-in Add New Plugin installer (https://github.com/Cointopay/Wordpress-WooCommerce/blob/master/wc-cointopay.zip)
-    2. Go to your WooCommerce Settings, and click the Checkout tab, find C2P/Cointopay.
+    2. Go to your WooCommerce Settings, and click the Payments tab, find Cointopay.
     3. In settings "MerchantID" <- set your Cointopay ID.
-    4. In settings "AltCoinID", this can also be found in the Account section of Cointopay.com. Default 1 for bitcoin, 2 litecoin etc..
-    5. In settings "SecurityCode" <- set your Cointopay Security code (no API key required)
-    6. Save changes
+    4. In settings "SecurityCode" <- set your Cointopay Security code (no API key required)
+    5. Save changes
 
 Tested on:
-- WordPress 3.8.1 --> 6.2.3
-- WooCommerce 2.1.9 --> 8.0.3 
+- WordPress 3.8.1 --> 6.3.1
+- WooCommerce 2.1.9 --> 8.1.1 
 
 # Changelog
 
