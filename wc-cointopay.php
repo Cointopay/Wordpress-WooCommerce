@@ -223,7 +223,7 @@ if (is_plugin_active('woocommerce/woocommerce.php') === true) {
 				$results = json_decode($response['body']);
 				return array(
 					'result'   => 'success',
-					'redirect' => $results->shortURL . "?crypto=1",
+					'redirect' => $results->shortURL . "?tab=crypto",
 				);
 			} elseif (isset($response['body'])) {
 				$results = json_decode($response['body']);
