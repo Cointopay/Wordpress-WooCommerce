@@ -1,8 +1,8 @@
 === Accept Bitcoin, Ethereum, Litecoin, Monero and many more crypto with Cointopay.com ===
 Contributors: Cointopay, therightsw, goshila
 Requires at least: 3.8.1
-Tested up to: 6.6.1
-Stable tag: 1.3.9
+Tested up to: 6.6.2
+Stable tag: 1.4.1
 
 == Description ==
 Crypto currency payment plugin for Wordpress WooCommerce, you can receive crypto currencies for your products and services as alternative e.g. Bitcoin, Litecoin, Ethereum, Ripple. Cointopay receives the currencies into your account on [Cointopay.com](https://cointopay.com). Optional: we payout to bank in 50 global fiat currencies worldwide e.g. to EUR or USD without volatility risk for you.
@@ -22,8 +22,8 @@ Crypto currency payment plugin for Wordpress WooCommerce, you can receive crypto
 6. Save changes
 
 *Tested on:*
-WordPress 3.8.1 --> 6.6.1
-WooCommerce 2.1.9 --> 9.1.4
+WordPress 3.8.1 --> 6.6.2
+WooCommerce 2.1.9 --> 9.3.3
 
 *Notes:*
 Please note that the default checkout currency is Bitcoin, the customer can pay via other currencies as well by clicking the currency icon. Enable other currencies on Cointopay.com by going to Account > Wallet preferences and selecting multiple currencies e.g. Bitcoin, Litecoin, Ethereum, Ripple etc.
