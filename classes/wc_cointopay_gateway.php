@@ -265,14 +265,12 @@ class WC_Cointopay_Gateway extends WC_Payment_Gateway {
 				} else {
 				    $order->payment_complete(); // This automatically sets status to processing
 				    $new_status = $order->get_status();
+					// Add order note
+					$order->add_order_note( __( 'IPN: Update status event for Cointopay from status '.$status.' to status '.$new_status.':', 'woocommerce' ) . ' ' . $orderid );
 				}
 				
 				// Save changes
 				$order->save();
-				
-				// Add order note
-				$order->add_order_note( __( 'IPN: Update status event for Cointopay to status '.$new_status.':', 'woocommerce' ) . ' ' . $orderid );
-
 
 				get_header();
 				echo '<div class="container" style="text-align: center;"><div><div><br><br><h2 style="color:#0fad00">Success!</h2><img style="margin:auto;"  src="' . esc_url(WC_Cointopay_Payments::plugin_url().'/assets/images/check.png') . '"><p style="font-size:20px;color:#5C5C5C;">The payment has been received and confirmed successfully.</p><a href="' . esc_url(site_url()) . '" style="background-color: #0fad00;border: none;color: white; padding: 15px 32px; text-align: center;text-decoration: none;display: inline-block; font-size: 16px;" >Back</a><br><br><br><br></div></div></div>';
