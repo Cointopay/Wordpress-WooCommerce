@@ -261,12 +261,12 @@ class WC_Cointopay_Gateway extends WC_Payment_Gateway {
 
 				if ( 'completed' === $status || 'processing' === $status ) {
 				    // Do nothing if order is already completed or processing
-				    $new_status = $status;
+				    //$new_status = $status;
 				} else {
 				    $order->payment_complete(); // This automatically sets status to processing
 				    $new_status = $order->get_status();
 					// Add order note
-					$order->add_order_note( __( 'IPN: Update status event for Cointopay from status '.$status.' to status '.$new_status.':', 'woocommerce' ) . ' ' . $orderid );
+					$order->add_order_note( __( 'IPN: Update event for Cointopay from status '.$status.' to '.$new_status.':', 'woocommerce' ) . ' ' . $orderid );
 				}
 				
 				// Save changes
