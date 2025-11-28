@@ -14,7 +14,7 @@ Please follow the Wordpress WooCommerce Cointopay Plugin install instructions me
 
 # Version:
 
-- Version 1.4.4
+- Version 1.4.5
 # Configuration Instructions
 
     1. Install zip file using WordPress built-in Add New Plugin installer (https://github.com/Cointopay/Wordpress-WooCommerce/blob/master/wc-cointopay.zip)
