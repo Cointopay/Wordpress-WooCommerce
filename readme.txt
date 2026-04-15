@@ -1,8 +1,12 @@
 === Cointopay — Crypto and Fiat Payments for WooCommerce ===
 Contributors: Cointopay, therightsw, goshila
 Requires at least: 3.8.1
-Tested up to: 6.9.4
-Stable tag: 1.4.7
+Tested up to: 6.9
+Stable tag: 1.4.8
+License: GPL v3
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
+
+Extends WooCommerce with crypto payments gateway.
 
 == Description ==
 Crypto currency payment plugin for Wordpress WooCommerce, you can receive crypto currencies for your products and services as alternative e.g. Bitcoin, Litecoin, Ethereum, Ripple. Cointopay receives the currencies into your account on [Cointopay.com](https://cointopay.com). Optional: we payout to bank in 50 global fiat currencies worldwide e.g. to EUR or USD without volatility risk for you.
