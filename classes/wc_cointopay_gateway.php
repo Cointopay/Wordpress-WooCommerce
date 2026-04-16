@@ -397,7 +397,7 @@ class WC_Cointopay_Gateway extends WC_Payment_Gateway {
 				$order->payment_complete(); // This automatically sets status to processing
 				$new_status = $order->get_status();
 				/* translators: 1: previous order status, 2: new order status, 3: order ID */
-				$message = sprintf(__( 'IPN: Update event for Cointopay from status %1$s to %2$s: %3$s', 'cointopay-com-cc-only' ),
+				$message = sprintf(__( 'IPN: Update event for Cointopay from status %1$s to %2$s: %3$s', 'wc-cointopay-com' ),
 					$status,
 					$new_status,
 					$orderid
@@ -422,7 +422,7 @@ class WC_Cointopay_Gateway extends WC_Payment_Gateway {
 			get_footer();
 			exit;
 		} elseif ('failed' === $ordstatus && 1 === $notenough) {
-			$order->update_status('on-hold', sprintf(__('IPN: Payment failed notification from Cointopay because notenough', 'woocommerce')));
+			$order->update_status('on-hold', sprintf(__('IPN: Payment failed notification from Cointopay because notenough', 'wc-cointopay-com')));
 			get_header();
 
 			echo '<div class="container" style="text-align: center;">
@@ -439,7 +439,7 @@ class WC_Cointopay_Gateway extends WC_Payment_Gateway {
 			get_footer();
 			exit;
 		} else {
-			$order->update_status('failed', sprintf(__('IPN: Payment failed notification from Cointopay', 'woocommerce')));
+			$order->update_status('failed', sprintf(__('IPN: Payment failed notification from Cointopay', 'wc-cointopay-com')));
 			get_header();
 
 			echo '<div class="container" style="text-align: center;">
