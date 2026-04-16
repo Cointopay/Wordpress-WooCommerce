@@ -2,7 +2,7 @@
 Contributors: Cointopay, therightsw, goshila
 Requires at least: 3.8.1
 Tested up to: 6.9
-Stable tag: 1.4.8
+Stable tag: 1.4.9
 License: GPL v3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
