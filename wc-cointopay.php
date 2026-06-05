@@ -2,13 +2,19 @@
 /**
  * Plugin Name: Cointopay — Crypto and Fiat Payments for WooCommerce
  * Description: Extends WooCommerce with crypto payments gateway.
- * Version: 1.4.9
+ * Version: 1.5.0
  * Author: Cointopay
- * Text Domain: wc-cointopay-com
  * @package  WooCommerce
  * @author   Cointopay <info@cointopay.com>
  * @link     cointopay.com
  * @disclaimer This plugin is using a https://cointopay.com backend integration, the Coinplusgroup S.R.O. Terms and conditions incl. privacy policy are applicable, please read the following information carefully: Terms: https://cointopay.com/terms and privacy policy: https://cdn-eur.s3.eu-west-1.amazonaws.com/Coinplusgroup-sro-Privacy-Policy.pdf. Any questions, please send to support@cointopay.com.
+ * Requires at least: 6.6
+ * Tested up to: 7.0
+ * WC requires at least: 8.1
+ * WC tested up to: 10.8.1
+ *
+ * Requires Plugins: woocommerce
+ * Text Domain: wc-cointopay-com
  * License: GPL v3.0
  */
 

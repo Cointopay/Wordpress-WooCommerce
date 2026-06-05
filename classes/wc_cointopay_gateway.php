@@ -19,7 +19,7 @@ class WC_Cointopay_Gateway extends WC_Payment_Gateway {
 	 **/
 	public function __construct() {
 		$this->id   = 'cointopay';
-		$this->icon = WC_Cointopay_Payments::plugin_url().'/assets/images/crypto.png';
+		$this->icon = WC_Cointopay_Payments::plugin_url().'/assets/images/cointopay_crypto.png';
 
 		$this->init_form_fields();
 		$this->init_settings();
